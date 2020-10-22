@@ -15,7 +15,7 @@ void single_bit_bimodal(char * input_file, FILE * output_file, unsigned long lon
     printf("Single bit bimodal size %llu\n", table_size);
     // index = address AND size
     int prediction_table[table_size];
-    for (int i = 0; i < table_size; i++) {
+    for (int i = 0; i <(int)table_size; i++) {
         prediction_table[i] = 1;
     }
 
@@ -59,7 +59,7 @@ void two_bit_bimodal(char * input_file, FILE * output_file, int size) {
     printf("Two bit bimodal size %llu\n", table_size);
     // index = address AND size
     int prediction_table[table_size];
-    for (int i = 0; i < table_size; i++) {
+    for (int i = 0; i < (int)table_size; i++) {
         prediction_table[i] = 3; // strongly taken
     }
 
@@ -123,7 +123,7 @@ void gshare(char * input_file, FILE * output_file, int ghr_size) {
     unsigned long long table_size = 2048; // size of prediction table
     printf("Gshare with ghr size %d\n", ghr_size);
     int prediction_table[table_size];
-    for (int i = 0; i < table_size; i++) {
+    for (int i = 0; i < (int)table_size; i++) {
         prediction_table[i] = 3; // strongly taken
     }
 
@@ -133,7 +133,6 @@ void gshare(char * input_file, FILE * output_file, int ghr_size) {
         ghr[i] = 0;
     }
     //printf("1\n");
-    unsigned long long ghr_decimal = 0;
 
     FILE * input = fopen(input_file, "r");
     // Temporary variables
@@ -189,7 +188,6 @@ void gshare(char * input_file, FILE * output_file, int ghr_size) {
         else {
             ghr[ghr_size-1] = 1;
         }
-        ghr_decimal = binary_decimal_convert(ghr, ghr_size);
     }
     fprintf(output_file, "%d,%d; ", correct_total, total);
 }
@@ -215,7 +213,6 @@ void tournament_predictor(char * input_file, FILE * output_file) {
     for (int i = 0; i < ghr_size; i++) {
         ghr[i] = 0;
     }
-    unsigned long long ghr_decimal = 0;
     // initialize selector table
     // 0 = strongly gshare, 1 = weakly gshare, 2 = weakly bimodal, 3 = strongly bimodal
     int selector[table_size];
@@ -574,7 +571,6 @@ void tournament_predictor(char * input_file, FILE * output_file) {
         else {
             ghr[ghr_size-1] = 1;
         }
-        ghr_decimal = binary_decimal_convert(ghr, ghr_size);
     }
     fprintf(output_file, "%d,%d; ", correct_total, total);
 }
@@ -667,10 +663,10 @@ int main(int argc, char *argv[]) {
 
     }
     fclose(input);
-    printf("Number of branches taken: %d\n", taken);
-    printf("Number of branches not taken: %d\n", not_taken);
-    fprintf(output, "%d,%d;\n\n", taken, total);
-    fprintf(output, "%d,%d;\n\n", not_taken, total);
+    // printf("Number of branches taken: %d\n", taken);
+    // printf("Number of branches not taken: %d\n", not_taken);
+    fprintf(output, "%d,%d;\n", taken, total);
+    fprintf(output, "%d,%d;\n", not_taken, total);
 
     // SINGLE BIT BIMODAL TESTS
     single_bit_bimodal(input_name, output, 4); // table size 16
@@ -680,7 +676,7 @@ int main(int argc, char *argv[]) {
     single_bit_bimodal(input_name, output, 9); // table size 512
     single_bit_bimodal(input_name, output, 10); // table size 1024
     single_bit_bimodal(input_name, output, 11); // table size 2048
-    fprintf(output, "\n\n");
+    fprintf(output, "\n");
 
     // TWO BIT BIMODAL TESTS
     two_bit_bimodal(input_name, output, 4); // table size 16
@@ -690,7 +686,7 @@ int main(int argc, char *argv[]) {
     two_bit_bimodal(input_name, output, 9); // table size 512
     two_bit_bimodal(input_name, output, 10); // table size 1024
     two_bit_bimodal(input_name, output, 11); // table size 2048
-    fprintf(output, "\n\n");
+    fprintf(output, "\n");
 
     gshare(input_name, output, 3);
     gshare(input_name, output, 4);
@@ -701,10 +697,10 @@ int main(int argc, char *argv[]) {
     gshare(input_name, output, 9);
     gshare(input_name, output, 10);
     gshare(input_name, output, 11);
-    fprintf(output, "\n\n");
+    fprintf(output, "\n");
 
     tournament_predictor(input_name, output);
-    fprintf(output, "\n\n");
+    fprintf(output, "\n");
 
     btb_predictor(input_name, output);
 
